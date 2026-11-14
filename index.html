@@ -104,18 +104,20 @@ main {
 }
 
 .game {
-  background: #ffffffb9;
-  border: 1px solid #ffffff;
-  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
   padding: 20px;
-  box-shadow: 0 10px 30px #b99bc51b;
-  transition: .2s;
+  box-shadow: 0 8px 30px rgba(185, 155, 210, 0.13);
+  transition: all 0.25s ease;
 }
 
 .game:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 14px 35px #d6b5ed55;
+  transform: translateY(-6px);
+  box-shadow: 0 16px 38px rgba(190, 150, 225, 0.25);
   border-color: #e8d5ff;
+  background: rgba(255, 255, 255, 0.78);
 }
 
 .cover {
