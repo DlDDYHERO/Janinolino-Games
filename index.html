@@ -292,6 +292,24 @@ const gameList = [
 
 
 let selected = "Alle";
+  async function loadSteamCovers() {
+  await Promise.all(gameList.map(async game => {
+    try {
+      const url = "https://proxy.cors.dev/https://store.steampowered.com/api/appdetails?appids=" + game.appid + "&filters=basic";
+
+      const response = await fetch(url, { credentials: "omit" });
+      const result = await response.json();
+
+      if (result[game.appid]?.success) {
+        game.image = result[game.appid].data.header_image;
+      }
+    } catch (error) {
+      console.log("Bild konnte nicht geladen werden:", game.name);
+    }
+  }));
+
+  renderGames();
+}
 
 function renderGames() {
   const search = document.getElementById("search").value.toLowerCase();
@@ -311,7 +329,7 @@ function renderGames() {
   container.innerHTML = filtered.map(game => `
     <article class="game">
       <div class="cover">
-  <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg" alt="${game.name}">
+ <img src="${game.image || ""}" alt="${game.name}">
 </div>
       <h3>${game.name}</h3>
       <div>
