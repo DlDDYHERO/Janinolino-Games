@@ -250,86 +250,7 @@ footer {
 
 <script>
 
-const gameList = [
-  {
-    name: "MECCHA CHAMELEON",
-    appid: 4704690,
-    category: ["Party", "Multiplayer"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Die Sims™ Legacy Collection",
-    appid: 3314060,
-    category: ["Cozy", "Simulator"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Waterpark Simulator",
-    appid: 3293260,
-    category: ["Simulator"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Retro Rewind - Video Store Simulator",
-    appid: 3552140,
-    category: ["Simulator"],
-    status: "Im Besitz"
-  },
-  {
-    name: "HELLMART",
-    appid: 3762550,
-    category: ["Horror"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Witch It",
-    appid: 559650,
-    category: ["Party", "Multiplayer"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Mimic Party",
-    appid: 5053820,
-    category: ["Party", "Multiplayer"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Scam With Your Friends",
-    appid: 4954910,
-    category: ["Party", "Multiplayer"],
-    status: "Im Besitz"
-  },
-  {
-    name: "RV There Yet?",
-    appid: 3949040,
-    category: ["Multiplayer"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Layers of Fear (2016)",
-    appid: 391720,
-    category: ["Horror"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Shift At Midnight",
-    appid: 3722330,
-    category: ["Horror"],
-    status: "Im Besitz"
-  },
-  {
-    name: "R.E.P.O.",
-    appid: 3241660,
-    category: ["Horror", "Multiplayer"],
-    status: "Im Besitz"
-  },
-  {
-    name: "Among Us",
-    appid: 945360,
-    category: ["Multiplayer", "Party"],
-    status: "Im Besitz"
-  }
-];
+let gameList = [];
 
 
 let selected = "Alle";
@@ -398,7 +319,34 @@ document.querySelectorAll(".filter").forEach(button => {
   });
 });
 
-loadSteamCovers();
+async function loadGamesFromDatabase() {
+  try {
+    const response = await fetch("/api/games");
+
+    if (!response.ok) {
+      throw new Error("Spiele konnten nicht geladen werden");
+    }
+
+    const games = await response.json();
+
+    gameList = games.map(game => ({
+      name: game.name,
+      appid: game.appid,
+      category: game.category.split(",").map(c => c.trim()),
+      status: game.status
+    }));
+
+    renderGames();
+    loadSteamCovers();
+
+  } catch (error) {
+    console.error("Fehler beim Laden:", error);
+    document.getElementById("games").innerHTML =
+      '<div class="empty">Spiele konnten nicht geladen werden 💜</div>';
+  }
+}
+
+loadGamesFromDatabase();
 </script>
 
 </body>
