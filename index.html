@@ -123,10 +123,15 @@ main {
 .cover {
   height: 125px;
   border-radius: 15px;
-  display: grid;
-  place-items: center;
-  font-size: 42px;
+  overflow: hidden;
   background: linear-gradient(135deg,#f6c8df,#d6c6fa,#b9e8f0);
+}
+
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .game h3 {
@@ -203,44 +208,88 @@ footer {
 </footer>
 
 <script>
+
 const gameList = [
   {
-    name: "Phasmophobia",
-    category: ["Horror", "Multiplayer"],
-    emoji: "👻",
-    status: "Auf der Wunschliste"
-  },
-  {
-    name: "Lethal Company",
-    category: ["Horror", "Multiplayer"],
-    emoji: "🚀",
-    status: "Auf der Wunschliste"
-  },
-  {
-    name: "The Sims 4",
-    category: ["Cozy", "Simulator"],
-    emoji: "🏡",
-    status: "Auf der Wunschliste"
-  },
-  {
-    name: "Stardew Valley",
-    category: ["Cozy", "Multiplayer"],
-    emoji: "🌸",
-    status: "Auf der Wunschliste"
-  },
-  {
-    name: "House Flipper",
-    category: ["Simulator", "Cozy"],
-    emoji: "🏠",
-    status: "Auf der Wunschliste"
-  },
-  {
-    name: "Party Animals",
+    name: "MECCHA CHAMELEON",
+    appid: 4704690,
     category: ["Party", "Multiplayer"],
-    emoji: "🐻",
-    status: "Auf der Wunschliste"
+    status: "Im Besitz"
+  },
+  {
+    name: "Die Sims™ Legacy Collection",
+    appid: 3314060,
+    category: ["Cozy", "Simulator"],
+    status: "Im Besitz"
+  },
+  {
+    name: "Waterpark Simulator",
+    appid: 3293260,
+    category: ["Simulator"],
+    status: "Im Besitz"
+  },
+  {
+    name: "Retro Rewind - Video Store Simulator",
+    appid: 3552140,
+    category: ["Simulator"],
+    status: "Im Besitz"
+  },
+  {
+    name: "HELLMART",
+    appid: 3762550,
+    category: ["Horror"],
+    status: "Im Besitz"
+  },
+  {
+    name: "Witch It",
+    appid: 559650,
+    category: ["Party", "Multiplayer"],
+    status: "Im Besitz"
+  },
+  {
+    name: "Mimic Party",
+    appid: 5053820,
+    category: ["Party", "Multiplayer"],
+    status: "Im Besitz"
+  },
+  {
+    name: "Scam With Your Friends",
+    appid: 4954910,
+    category: ["Party", "Multiplayer"],
+    status: "Im Besitz"
+  },
+  {
+    name: "RV There Yet?",
+    appid: 3949040,
+    category: ["Multiplayer"],
+    status: "Im Besitz"
+  },
+  {
+    name: "Layers of Fear (2016)",
+    appid: 391720,
+    category: ["Horror"],
+    status: "Im Besitz"
+  },
+  {
+    name: "Shift At Midnight",
+    appid: 3722330,
+    category: ["Horror"],
+    status: "Im Besitz"
+  },
+  {
+    name: "R.E.P.O.",
+    appid: 3241660,
+    category: ["Horror", "Multiplayer"],
+    status: "Im Besitz"
+  },
+  {
+    name: "Among Us",
+    appid: 945360,
+    category: ["Multiplayer", "Party"],
+    status: "Im Besitz"
   }
 ];
+
 
 let selected = "Alle";
 
@@ -261,7 +310,9 @@ function renderGames() {
 
   container.innerHTML = filtered.map(game => `
     <article class="game">
-      <div class="cover">${game.emoji}</div>
+      <div class="cover">
+  <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg" alt="${game.name}">
+</div>
       <h3>${game.name}</h3>
       <div>
         ${game.category.map(cat =>
