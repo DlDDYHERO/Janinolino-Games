@@ -169,7 +169,12 @@ main {
 }
 
 .status {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 30px;
+  min-width: 145px;
   color: #8b6da8;
   background: #f1e7fa;
   border: 1px solid #e2d1f0;
@@ -177,6 +182,7 @@ main {
   padding: 5px 12px;
   font-size: 13px;
   margin-top: 13px;
+  white-space: nowrap;
 }
 
 .empty {
