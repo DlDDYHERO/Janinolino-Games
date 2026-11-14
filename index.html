@@ -118,6 +118,10 @@ main {
 }
 
 .game {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
   background: rgba(255, 255, 255, 0.58);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.85);
@@ -184,7 +188,10 @@ main {
   margin-top: 13px;
   white-space: nowrap;
 }
-
+.game .status {
+  margin-top: auto;
+  align-self: flex-start;
+}
 .empty {
   text-align: center;
   padding: 40px;
