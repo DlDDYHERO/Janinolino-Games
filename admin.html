@@ -85,8 +85,14 @@ button:hover { background: #ddc8f1; }
       <form id="gameForm">
         <input id="name" placeholder="Spielname" required>
         <input id="appid" placeholder="Steam App-ID (optional)">
-        <input id="category"
-          placeholder="Kategorien, z. B. Horror, Multiplayer" required>
+       <div id="categoryOptions">
+  <p>Kategorien auswählen:</p>
+  <label><input type="checkbox" value="Horror"> Horror</label>
+  <label><input type="checkbox" value="Cozy"> Cozy</label>
+  <label><input type="checkbox" value="Simulator"> Simulator</label>
+  <label><input type="checkbox" value="Multiplayer"> Multiplayer</label>
+  <label><input type="checkbox" value="Party"> Party</label>
+</div>
         <select id="status">
           <option>Im Besitz</option>
           <option>Durchgespielt</option>
