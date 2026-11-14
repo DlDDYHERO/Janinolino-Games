@@ -248,9 +248,12 @@ async event => {
 function editGame(game) {
   document.getElementById("name").value = game.name;
   document.getElementById("appid").value = game.appid || "";
-  document.querySelectorAll('#categoryOptions input').forEach(input => {
-  input.checked = game.category.split(",").map(c => c.trim()).includes(input.value);
-});
+  selectedCategories = (game.category || "")
+  .split(",")
+  .map(c => c.trim())
+  .filter(Boolean);
+
+renderSelectedCategories();
   document.getElementById("status").value = game.status;
 
   gameForm.dataset.editId = game.id;
@@ -262,6 +265,8 @@ function editGame(game) {
 
 function resetForm() {
   gameForm.reset();
+    selectedCategories = [];
+  renderSelectedCategories();
   delete gameForm.dataset.editId;
   document.getElementById("formTitle").textContent =
     "Neues Spiel hinzufügen";
