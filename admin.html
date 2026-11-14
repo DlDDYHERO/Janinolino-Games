@@ -79,6 +79,7 @@ button:hover { background: #ddc8f1; }
   <section id="admin">
     <div class="panel">
       <h1>✦ Spieleverwaltung ✦</h1>
+      <button type="button" id="logoutButton">Abmelden ✕</button>
       <p>Hier kannst du die Games verwalten.</p>
       <h2 id="formTitle">Neues Spiel hinzufügen</h2>
       <form id="gameForm">
@@ -276,7 +277,10 @@ async function deleteGame(id) {
     message.textContent = "Löschen fehlgeschlagen. Bitte neu anmelden.";
   }
 }
-
+document.getElementById("logoutButton").addEventListener("click", async () => {
+  await fetch("/api/logout", { method: "POST" });
+  window.location.reload();
+});
 checkLogin();
 </script>
 </body>
