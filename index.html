@@ -359,7 +359,7 @@ function renderGames() {
 }
 
 document.getElementById("search").addEventListener("input", renderGames);
-
+document.getElementById("statusFilter").addEventListener("change", renderGames);
 document.querySelectorAll(".filter").forEach(button => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".filter").forEach(b =>
