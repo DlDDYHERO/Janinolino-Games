@@ -243,7 +243,7 @@ gameForm.addEventListener("submit", async event => {
     appid: document.getElementById("appid").value,
     category: [...document.querySelectorAll('#categoryOptions input:checked')]
   .map(input => input.value)
-  .join(", "),,
+  .join(", "),
     status: document.getElementById("status").value
   };
 if (!data.category) {
