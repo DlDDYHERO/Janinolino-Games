@@ -86,12 +86,43 @@ button:hover { background: #ddc8f1; }
         <input id="name" placeholder="Spielname" required>
         <input id="appid" placeholder="Steam App-ID (optional)">
        <div id="categoryOptions">
-  <p>Kategorien auswählen:</p>
-  <label><input type="checkbox" value="Horror"> Horror</label>
-  <label><input type="checkbox" value="Cozy"> Cozy</label>
-  <label><input type="checkbox" value="Simulator"> Simulator</label>
-  <label><input type="checkbox" value="Multiplayer"> Multiplayer</label>
-  <label><input type="checkbox" value="Party"> Party</label>
+  <p>Kategorien hinzufügen:</p>
+
+  <input
+    id="categoryInput"
+    list="categorySuggestions"
+    placeholder="Kategorie eingeben oder auswählen..."
+    autocomplete="off"
+  >
+
+  <datalist id="categorySuggestions">
+    <option value="Horror">
+    <option value="Action">
+    <option value="Adventure">
+    <option value="Cozy">
+    <option value="Simulation">
+    <option value="Simulator">
+    <option value="Multiplayer">
+    <option value="Party">
+    <option value="Survival">
+    <option value="Roguelike">
+    <option value="RPG">
+    <option value="Strategy">
+    <option value="Puzzle">
+    <option value="Racing">
+    <option value="Sports">
+    <option value="Sandbox">
+    <option value="Open World">
+    <option value="Platformer">
+    <option value="Indie">
+    <option value="Casual">
+  </datalist>
+
+  <button type="button" id="addCategoryButton">
+    Kategorie hinzufügen
+  </button>
+
+  <div id="selectedCategories"></div>
 </div>
         <select id="status">
           <option>Im Besitz</option>
@@ -117,7 +148,12 @@ const adminSection = document.getElementById("admin");
 const message = document.getElementById("message");
 const gameForm = document.getElementById("gameForm");
 const gamesList = document.getElementById("gamesList");
+const gameForm = document.getElementById("gameForm");
+const gamesList = document.getElementById("gamesList");
 
+// HIER den neuen Kategorie-Code einfügen
+
+async function loadGames() {
 async function loadGames() {
   gamesList.textContent = "Spiele werden geladen...";
   try {
