@@ -277,9 +277,7 @@ gameForm.addEventListener("submit", async event => {
   const data = {
     name: document.getElementById("name").value,
     appid: document.getElementById("appid").value,
-    category: [...document.querySelectorAll('#categoryOptions input:checked')]
-  .map(input => input.value)
-  .join(", "),
+   category: selectedCategories.join(", "),
     status: document.getElementById("status").value
   };
 if (!data.category) {
