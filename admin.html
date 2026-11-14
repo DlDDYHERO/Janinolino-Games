@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Janinolino | Admin</title>
+
+<style>
+@font-face {
+  font-family: Bubbles;
+  src: url("BubblesIn90s.otf");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Bubbles, sans-serif;
+  background: linear-gradient(135deg, #fce4f2, #e8e1ff, #dff3ff);
+  color: #806493;
+}
+
+.login {
+  width: 90%;
+  max-width: 390px;
+  padding: 35px;
+  text-align: center;
+  background: rgba(255,255,255,.7);
+  border: 1px solid white;
+  border-radius: 25px;
+  box-shadow: 0 10px 35px #b99bd233;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+input, button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 14px;
+  border: 1px solid #e2d1f0;
+  border-radius: 15px;
+  font: inherit;
+}
+
+input {
+  background: white;
+  color: #806493;
+}
+
+button {
+  background: #eadcf8;
+  color: #806493;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #ddc8f1;
+}
+
+#message {
+  margin-top: 15px;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login">
+  <h1>✦ JANINOLINO ✦</h1>
+  <p>Admin-Bereich ♡</p>
+
+  <form id="loginForm">
+    <input
+      type="password"
+      id="password"
+      placeholder="Admin-Passwort"
+      required
+    >
+    <button type="submit">Einloggen</button>
+  </form>
+
+  <div id="message"></div>
+</div>
+
+<script>
+async function checkLogin() {
+  try {
+    const response = await fetch("/api/check");
+
+    if (response.ok) {
+      document.getElementById("message").textContent =
+        "Erfolgreich eingeloggt! Die Spieleverwaltung folgt.";
+      document.getElementById("loginForm").style.display = "none";
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+document.getElementById("loginForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const password = document.getElementById("password").value;
+  const message = document.getElementById("message");
+
+  message.textContent = "Bitte warten...";
+
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password })
+    });
+
+    if (response.ok) {
+      message.textContent = "Login erfolgreich! ♡";
+      document.getElementById("loginForm").style.display = "none";
+    } else {
+      message.textContent = "Das Passwort ist leider falsch.";
+    }
+  } catch (error) {
+    message.textContent = "Verbindungsfehler. Bitte später erneut versuchen.";
+  }
+});
+
+checkLogin();
+</script>
+
+</body>
+</html>
