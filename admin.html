@@ -212,7 +212,9 @@ async event => {
 function editGame(game) {
   document.getElementById("name").value = game.name;
   document.getElementById("appid").value = game.appid || "";
-  document.getElementById("category").value = game.category;
+  document.querySelectorAll('#categoryOptions input').forEach(input => {
+  input.checked = game.category.split(",").map(c => c.trim()).includes(input.value);
+});
   document.getElementById("status").value = game.status;
 
   gameForm.dataset.editId = game.id;
@@ -239,7 +241,9 @@ gameForm.addEventListener("submit", async event => {
   const data = {
     name: document.getElementById("name").value,
     appid: document.getElementById("appid").value,
-    category: document.getElementById("category").value,
+    category: [...document.querySelectorAll('#categoryOptions input:checked')]
+  .map(input => input.value)
+  .join(", "),,
     status: document.getElementById("status").value
   };
 
