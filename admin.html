@@ -246,7 +246,10 @@ gameForm.addEventListener("submit", async event => {
   .join(", "),,
     status: document.getElementById("status").value
   };
-
+if (!data.category) {
+  alert("Bitte mindestens eine Kategorie auswählen!");
+  return;
+}
   const id = gameForm.dataset.editId;
   if (id) data.id = Number(id);
 
