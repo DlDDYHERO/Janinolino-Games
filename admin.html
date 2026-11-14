@@ -153,7 +153,54 @@ const gamesList = document.getElementById("gamesList");
 
 // HIER den neuen Kategorie-Code einfügen
 
+let selectedCategories = [];
 
+function renderSelectedCategories() {
+  const container = document.getElementById("selectedCategories");
+  container.replaceChildren();
+
+  selectedCategories.forEach(category => {
+    const item = document.createElement("span");
+    item.textContent = category + " ";
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "✕";
+
+    remove.addEventListener("click", () => {
+      selectedCategories = selectedCategories.filter(c => c !== category);
+      renderSelectedCategories();
+    });
+
+    item.append(remove);
+    container.append(item);
+  });
+}
+
+function addCategory() {
+  const input = document.getElementById("categoryInput");
+  const category = input.value.trim();
+
+  if (!category) return;
+
+  if (!selectedCategories.some(c => c.toLowerCase() === category.toLowerCase())) {
+    selectedCategories.push(category);
+  }
+
+  input.value = "";
+  renderSelectedCategories();
+}
+
+document.getElementById("addCategoryButton")
+  .addEventListener("click", addCategory);
+
+document.getElementById("categoryInput")
+  .addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      addCategory();
+    }
+  });
 async function loadGames() {
   gamesList.textContent = "Spiele werden geladen...";
   try {
