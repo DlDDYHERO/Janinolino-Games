@@ -1,139 +1,283 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Janinolino | Admin</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Janinolino | Spieleverwaltung</title>
 <style>
 @font-face {
   font-family: Bubbles;
   src: url("BubblesIn90s.otf");
 }
-
-* {
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 25px 15px;
   font-family: Bubbles, sans-serif;
-  background: linear-gradient(135deg, #fce4f2, #e8e1ff, #dff3ff);
   color: #806493;
+  background: linear-gradient(135deg,#fce4f2,#e8e1ff,#dff3ff);
+  min-height: 100vh;
 }
-
-.login {
-  width: 90%;
-  max-width: 390px;
-  padding: 35px;
-  text-align: center;
-  background: rgba(255,255,255,.7);
+main {
+  max-width: 850px;
+  margin: 30px auto;
+}
+.panel {
+  background: rgba(255,255,255,.75);
   border: 1px solid white;
-  border-radius: 25px;
-  box-shadow: 0 10px 35px #b99bd233;
+  border-radius: 24px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 30px #b99bd222;
 }
-
-h1 {
-  font-size: 28px;
-}
-
-input, button {
+h1, h2 { text-align: center; }
+input, select, button {
   width: 100%;
-  padding: 13px;
-  margin-top: 14px;
+  padding: 12px;
+  margin: 7px 0;
   border: 1px solid #e2d1f0;
-  border-radius: 15px;
+  border-radius: 13px;
   font: inherit;
 }
-
-input {
-  background: white;
-  color: #806493;
-}
-
 button {
   background: #eadcf8;
   color: #806493;
   cursor: pointer;
 }
-
-button:hover {
-  background: #ddc8f1;
+button:hover { background: #ddc8f1; }
+.game {
+  background: #fff9ff;
+  border: 1px solid #eadcf8;
+  border-radius: 16px;
+  padding: 15px;
+  margin: 12px 0;
 }
-
-#message {
-  margin-top: 15px;
-  font-size: 14px;
+.game strong { display: block; margin-bottom: 7px; }
+.actions {
+  display: flex;
+  gap: 10px;
 }
+.actions button { flex: 1; }
+#admin, #cancelEdit { display: none; }
+#message { text-align: center; margin: 12px 0; }
+.small { font-size: 13px; opacity: .8; }
 </style>
 </head>
-
 <body>
+<main>
+  <section class="panel" id="login">
+    <h1>✦ JANINOLINO ✦</h1>
+    <h2>Admin-Bereich ♡</h2>
+    <form id="loginForm">
+      <input type="password" id="password"
+        placeholder="Admin-Passwort" required>
+      <button type="submit">Einloggen</button>
+    </form>
+  </section>
 
-<div class="login">
-  <h1>✦ JANINOLINO ✦</h1>
-  <p>Admin-Bereich ♡</p>
+  <section id="admin">
+    <div class="panel">
+      <h1>✦ Spieleverwaltung ✦</h1>
+      <p>Hier kannst du die Games verwalten.</p>
+      <h2 id="formTitle">Neues Spiel hinzufügen</h2>
+      <form id="gameForm">
+        <input id="name" placeholder="Spielname" required>
+        <input id="appid" placeholder="Steam App-ID (optional)">
+        <input id="category"
+          placeholder="Kategorien, z. B. Horror, Multiplayer" required>
+        <select id="status">
+          <option>Im Besitz</option>
+          <option>Durchgespielt</option>
+          <option>Auf Wishlist</option>
+        </select>
+        <button type="submit" id="saveButton">Spiel hinzufügen</button>
+        <button type="button" id="cancelEdit">Bearbeiten abbrechen</button>
+      </form>
+      <div id="message"></div>
+    </div>
 
-  <form id="loginForm">
-    <input
-      type="password"
-      id="password"
-      placeholder="Admin-Passwort"
-      required
-    >
-    <button type="submit">Einloggen</button>
-  </form>
-
-  <div id="message"></div>
-</div>
+    <div class="panel">
+      <h2>Alle Spiele</h2>
+      <div id="gamesList">Spiele werden geladen...</div>
+    </div>
+  </section>
+</main>
 
 <script>
-async function checkLogin() {
-  try {
-    const response = await fetch("/api/check");
+const loginSection = document.getElementById("login");
+const adminSection = document.getElementById("admin");
+const message = document.getElementById("message");
+const gameForm = document.getElementById("gameForm");
+const gamesList = document.getElementById("gamesList");
 
-    if (response.ok) {
-      document.getElementById("message").textContent =
-        "Erfolgreich eingeloggt! Die Spieleverwaltung folgt.";
-      document.getElementById("loginForm").style.display = "none";
+async function loadGames() {
+  gamesList.textContent = "Spiele werden geladen...";
+  try {
+    const response = await fetch("/api/games");
+    if (!response.ok) throw new Error();
+    const games = await response.json();
+
+    gamesList.replaceChildren();
+
+    games.forEach(game => {
+      const card = document.createElement("div");
+      card.className = "game";
+
+      const title = document.createElement("strong");
+      title.textContent = game.name;
+
+      const details = document.createElement("p");
+      details.textContent =
+        "Kategorie: " + game.category + " | Status: " + game.status;
+
+      const appid = document.createElement("p");
+      appid.className = "small";
+      appid.textContent = game.appid
+        ? "Steam App-ID: " + game.appid
+        : "Keine Steam App-ID";
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const edit = document.createElement("button");
+      edit.textContent = "Bearbeiten";
+      edit.type = "button";
+      edit.addEventListener("click", () => editGame(game));
+
+      const remove = document.createElement("button");
+      remove.textContent = "Löschen";
+      remove.type = "button";
+      remove.addEventListener("click", () => deleteGame(game.id));
+
+      actions.append(edit, remove);
+      card.append(title, details, appid, actions);
+      gamesList.append(card);
+    });
+
+    if (games.length === 0) {
+      gamesList.textContent = "Noch keine Spiele vorhanden.";
     }
-  } catch (error) {
-    console.error(error);
+  } catch {
+    gamesList.textContent = "Fehler beim Laden der Spiele.";
   }
 }
 
-document.getElementById("loginForm").addEventListener("submit", async (event) => {
+function showAdmin() {
+  loginSection.style.display = "none";
+  adminSection.style.display = "block";
+  loadGames();
+}
+
+async function checkLogin() {
+  try {
+    const response = await fetch("/api/check");
+    if (response.ok) showAdmin();
+  } catch {}
+}
+
+document.getElementById("loginForm").addEventListener("submit",
+async event => {
   event.preventDefault();
-
-  const password = document.getElementById("password").value;
-  const message = document.getElementById("message");
-
-  message.textContent = "Bitte warten...";
+  message.textContent = "Anmeldung läuft...";
 
   try {
     const response = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password })
+      body: JSON.stringify({
+        password: document.getElementById("password").value
+      })
     });
 
-    if (response.ok) {
-      message.textContent = "Login erfolgreich! ♡";
-      document.getElementById("loginForm").style.display = "none";
-    } else {
-      message.textContent = "Das Passwort ist leider falsch.";
+    if (!response.ok) {
+      message.textContent = "Passwort ist leider falsch.";
+      return;
     }
-  } catch (error) {
-    message.textContent = "Verbindungsfehler. Bitte später erneut versuchen.";
+
+    message.textContent = "";
+    showAdmin();
+  } catch {
+    message.textContent = "Verbindungsfehler.";
   }
 });
 
+function editGame(game) {
+  document.getElementById("name").value = game.name;
+  document.getElementById("appid").value = game.appid || "";
+  document.getElementById("category").value = game.category;
+  document.getElementById("status").value = game.status;
+
+  gameForm.dataset.editId = game.id;
+  document.getElementById("formTitle").textContent = "Spiel bearbeiten";
+  document.getElementById("saveButton").textContent = "Änderungen speichern";
+  document.getElementById("cancelEdit").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function resetForm() {
+  gameForm.reset();
+  delete gameForm.dataset.editId;
+  document.getElementById("formTitle").textContent =
+    "Neues Spiel hinzufügen";
+  document.getElementById("saveButton").textContent = "Spiel hinzufügen";
+  document.getElementById("cancelEdit").style.display = "none";
+}
+
+document.getElementById("cancelEdit").addEventListener("click", resetForm);
+
+gameForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const data = {
+    name: document.getElementById("name").value,
+    appid: document.getElementById("appid").value,
+    category: document.getElementById("category").value,
+    status: document.getElementById("status").value
+  };
+
+  const id = gameForm.dataset.editId;
+  if (id) data.id = Number(id);
+
+  message.textContent = "Wird gespeichert...";
+
+  try {
+    const response = await fetch("/api/games", {
+      method: id ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) throw new Error();
+
+    message.textContent = "Spiel erfolgreich gespeichert! ♡";
+    resetForm();
+    await loadGames();
+  } catch {
+    message.textContent = "Speichern fehlgeschlagen. Bitte neu anmelden.";
+  }
+});
+
+async function deleteGame(id) {
+  if (!confirm("Möchtest du dieses Spiel wirklich löschen?")) return;
+
+  try {
+    const response = await fetch("/api/games", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id })
+    });
+
+    if (!response.ok) throw new Error();
+
+    message.textContent = "Spiel gelöscht.";
+    await loadGames();
+  } catch {
+    message.textContent = "Löschen fehlgeschlagen. Bitte neu anmelden.";
+  }
+}
+
 checkLogin();
 </script>
-
 </body>
 </html>
