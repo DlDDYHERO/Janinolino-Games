@@ -327,10 +327,12 @@ let selected = "Alle";
 
 function renderGames() {
   const search = document.getElementById("search").value.toLowerCase();
+  const statusSelected = document.getElementById("statusFilter").value;
 
   const filtered = gameList.filter(game =>
     game.name.toLowerCase().includes(search) &&
-    (selected === "Alle" || game.category.includes(selected))
+    (selected === "Alle" || game.category.includes(selected)) &&
+    (statusSelected === "Alle" || game.status === statusSelected)
   );
 
   const container = document.getElementById("games");
