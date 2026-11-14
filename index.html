@@ -132,8 +132,11 @@ main {
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
 }
-
+.game:hover .cover img {
+  transform: scale(1.08);
+}
 .game h3 {
   margin-bottom: 8px;
   color: #655477;
