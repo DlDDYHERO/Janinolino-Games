@@ -305,15 +305,10 @@ function renderGames() {
 
 document.getElementById("search").addEventListener("input", renderGames);
 document.getElementById("statusFilter").addEventListener("change", renderGames);
-document.querySelectorAll(".filter").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".filter").forEach(b =>
-      b.classList.remove("active")
-    );
-    button.classList.add("active");
-    selected = button.dataset.category;
-    renderGames();
-  });
+
+document.getElementById("categoryFilter").addEventListener("change", event => {
+  selected = event.target.value;
+  renderGames();
 });
 
 async function loadGamesFromDatabase() {
