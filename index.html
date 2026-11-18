@@ -273,8 +273,14 @@ let gameList = [];
 
 
 let selected = "Alle";
-  async function loadSteamCovers() {
+async function loadSteamCovers() {
   await Promise.all(gameList.map(async game => {
+
+    if (game.name.toLowerCase().includes("captcha")) {
+      game.image = "/captcha-game.png";
+      return;
+    }
+
     try {
       const url = "https://proxy.cors.dev/https://store.steampowered.com/api/appdetails?appids=" + game.appid + "&filters=basic";
 
@@ -288,6 +294,7 @@ let selected = "Alle";
       console.log("Bild konnte nicht geladen werden:", game.name);
     }
   }));
+}
 
   renderGames();
 }
