@@ -321,14 +321,29 @@ async function loadGamesFromDatabase() {
 
     const games = await response.json();
 
-    gameList = games.map(game => ({
-      name: game.name,
-      appid: game.appid,
-      category: game.category.split(",").map(c => c.trim()),
-      status: game.status
-    }));
+   gameList = games.map(game => ({
+  name: game.name,
+  appid: game.appid,
+  category: game.category.split(",").map(c => c.trim()),
+  status: game.status
+}));
 
-    renderGames();
+// Kategorien automatisch aus den Spielen sammeln
+const categoryFilter = document.getElementById("categoryFilter");
+
+const categories = [...new Set(
+  gameList.flatMap(game => game.category)
+)].sort();
+
+categoryFilter.replaceChildren(
+  new Option("Alle Kategorien", "Alle")
+);
+
+categories.forEach(category => {
+  categoryFilter.add(new Option(category, category));
+});
+
+renderGames();
     loadSteamCovers();
 
   } catch (error) {
